@@ -1,58 +1,79 @@
-# <a href="https://hf.co/learn/agents-course" target="_blank">The Hugging Face Agents Course</a>
+# Agentic AI Tutorial
 
-If you like the course, **don't hesitate to ⭐ star this repository**. This helps us to **make the course more visible 🤗**.
+A hands-on collection of lessons and notebooks for learning how to build AI agents with Python. The repository covers agent fundamentals, tool use, planning, multi-agent systems, retrieval-augmented generation, observability, and evaluation.
 
-<img src="https://huggingface.co/datasets/agents-course/course-images/resolve/main/en/communication/please_star.gif" alt="Star the repo" />
+This project is adapted from the open-source [Hugging Face Agents Course](https://github.com/huggingface/agents-course) and includes local experiments and compatibility updates.
 
-## Content
+## Highlights
 
-The course is divided into 4 units. These will take you from **the basics of agents to a final assignment with a benchmark**.
+- Introductory material on language models and agent workflows
+- Examples using `smolagents`, LangGraph, and LlamaIndex
+- Tool-calling, web-search, and code-agent notebooks
+- Multi-agent orchestration examples
+- Agentic RAG and evaluation material
+- English and translated course content
 
-Sign up here (it's free) 👉 <a href="https://bit.ly/hf-learn-agents" target="_blank">https://bit.ly/hf-learn-agents</a>
+## Featured notebook
 
-You can access the course here 👉 <a href="https://hf.co/learn/agents-course" target="_blank">https://hf.co/learn/agents-course</a>
+The multi-agent tutorial builds a manager agent and a dedicated web-search agent. Together they research Batman filming locations and supercar factories, calculate cargo-plane travel times, and export the result as a Plotly map.
 
-| Unit    | Topic                                                                                                          | Description                                                                                                                            |
-|---------|----------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| 0       | [Welcome to the Course](https://huggingface.co/learn/agents-course/en/unit0/introduction)                      | Welcome, guidelines, necessary tools, and course overview.                                                                             |
-| 1       | [Introduction to Agents](https://huggingface.co/learn/agents-course/en/unit1/introduction)                     | Definition of agents, LLMs, model family tree, and special tokens.                                                                     |
-| 1 Bonus | [Fine-tuning an LLM for Function-calling](https://huggingface.co/learn/agents-course/bonus-unit1/introduction) | Learn how to fine-tune an LLM for Function-Calling                                                                                     |
-| 2       | [Frameworks for AI Agents](https://huggingface.co/learn/agents-course/unit2/introduction)                      | Overview of `smolagents`, `LangGraph` and `LlamaIndex`.                                                                                |
-| 2.1     | [The Smolagents Framework](https://huggingface.co/learn/agents-course/unit2/smolagents/introduction)           | Learn how to build effective agents using the `smolagents` library, a lightweight framework for creating capable AI agents.            |
-| 2.2     | [The LlamaIndex Framework](https://huggingface.co/learn/agents-course/unit2/llama-index/introduction)          | Learn how to build LLM-powered agents over your data using indexes and workflows using the `LlamaIndex` toolkit.                       |
-| 2.3     | [The LangGraph Framework](https://huggingface.co/learn/agents-course/unit2/langgraph/introduction)             | Learn how to build production-ready applications using the `LangGraph` framework giving you control tools over the flow of your agent. |
-| 2 Bonus | [Observability and Evaluation](https://huggingface.co/learn/agents-course/bonus-unit2/introduction)            | Learn how to trace and evaluate your agents.                                                                                           |
-| 3       | [Use Case for Agentic RAG](https://huggingface.co/learn/agents-course/unit3/agentic-rag/introduction)          | Learn how to use Agentic RAG to help agents respond to different use cases using various frameworks.                                                                   |
-| 4       | [Final Project - Create, Test and Certify Your Agent](https://huggingface.co/learn/agents-course/unit4/introduction)          | Automated evaluation of agents and leaderboard with student results.                                                                   |
-| 3 Bonus | [Agents in Games with Pokemon](https://huggingface.co/learn/agents-course/bonus-unit3/introduction)            | Explore the exciting intersection of AI Agents and games.        |
-                                                                                   
-## Prerequisites
+- Notebook: [`notebooks/unit2/smolagents/multiagent_notebook.ipynb`](notebooks/unit2/smolagents/multiagent_notebook.ipynb)
+- Example output: [`notebooks/unit2/smolagents/saved_map.png`](notebooks/unit2/smolagents/saved_map.png)
 
-- Basic knowledge of Python
-- Basic knowledge of LLMs
+The notebook includes compatibility fixes for current `smolagents` releases, including explicit Plotly submodule authorization, the current final-answer-check callback signature, and consistent PNG output naming.
 
-## Contribution Guidelines
+## Getting started
 
-If you want to contribute to this course, you're welcome to do so. Feel free to open an issue or join the discussion in the [Discord](https://discord.gg/UrrTSsSyjb). For specific contributions, here are some guidelines:
+### 1. Clone the repository
 
-### Small typo and grammar fixes
-
-If you find a small typo or grammar mistake, please fix it yourself and submit a pull request. This is very helpful for students.
-
-### New unit
-
-If you want to add a new unit, **please create an issue in the repository, describe the unit, and why it should be added**. We will discuss it and if it's a good addition, we can collaborate on it.
-
-## Citing the project
-
-To cite this repository in publications:
-
-```bibtex
-@misc{agents-course,
-  author = {Burtenshaw, Ben and Thomas, Joffrey and Simonini, Thomas and Paniego, Sergio},
-  title = {The Hugging Face Agents Course},
-  year = {2025},
-  howpublished = {\url{https://github.com/huggingface/agents-course}},
-  note = {GitHub repository},
-}
+```bash
+git clone https://github.com/stanghong/AgenticAI_Tutorial.git
+cd AgenticAI_Tutorial
 ```
+
+### 2. Create a virtual environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+```
+
+### 3. Install notebook dependencies
+
+The notebooks contain their own installation cells. For the featured multi-agent notebook, install:
+
+```bash
+pip install "smolagents[openai]" plotly geopandas shapely kaleido jupyter
+```
+
+Plotly static-image export uses Kaleido and requires a compatible Chrome or Chromium installation.
+
+### 4. Configure the OpenAI API
+
+Set the key in your shell before launching Jupyter:
+
+```bash
+export OPENAI_API_KEY="your-api-key"
+export OPENAI_MODEL="gpt-4o-mini"  # optional
+jupyter lab
+```
+
+If `OPENAI_API_KEY` is not already set, the featured notebook requests it securely at runtime.
+
+## Repository layout
+
+```text
+notebooks/  Executable tutorials and experiments
+units/      Course lessons in multiple languages
+quiz/       Quiz data and supporting utilities
+scripts/    Translation and maintenance scripts
+```
+
+## Keeping secrets safe
+
+The repository's `.gitignore` excludes `.env` and common virtual-environment directories. Never commit API keys, access tokens, or other credentials. If you store credentials in a local `.env` file, keep that file only on your machine.
+
+## Attribution
+
+The original course content was created by the Hugging Face Agents Course contributors. See the upstream [course repository](https://github.com/huggingface/agents-course) and this repository's [LICENSE](LICENSE) for details.
