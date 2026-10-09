@@ -38,6 +38,23 @@ The notebook includes compatibility fixes for current `smolagents` releases:
 - The current final-answer-check callback signature
 - Consistent use of `saved_map.png` for PNG export
 
+## Vision web-browser example
+
+[`vision_web_browser.py`](notebooks/unit2/smolagents/vision_web_browser.py) combines a `smolagents` code agent with Selenium and Helium. It captures the current browser window after each step and sends the screenshot to an OpenAI vision-capable model so the agent can navigate visually.
+
+The script uses `OpenAIServerModel` directly, defaults to `gpt-4.1-mini`, and expects agent-generated Python inside `<code>...</code>` tags. Install its dependencies with:
+
+```bash
+pip install "smolagents[openai]" helium selenium pillow python-dotenv
+```
+
+Then run the built-in example or provide a custom prompt:
+
+```bash
+python notebooks/unit2/smolagents/vision_web_browser.py
+python notebooks/unit2/smolagents/vision_web_browser.py "Find the latest smolagents release notes"
+```
+
 ## Getting started
 
 ```bash
@@ -64,10 +81,10 @@ Set your key before starting Jupyter:
 
 ```bash
 export OPENAI_API_KEY="your-api-key"
-export OPENAI_MODEL="gpt-4o-mini"  # optional
+export OPENAI_MODEL="gpt-4o-mini"  # optional notebook override
 ```
 
-If `OPENAI_API_KEY` is not set, the featured notebook prompts for it securely at runtime.
+The vision browser defaults to `gpt-4.1-mini`; override it with `OPENAI_MODEL` or its `--model-id` option. If `OPENAI_API_KEY` is not set, the featured notebook prompts for it securely at runtime, while the standalone vision browser exits with a configuration error.
 
 ## Secret safety
 

@@ -1,4 +1,5 @@
 import argparse
+import os
 from io import BytesIO
 from time import sleep
 
@@ -9,9 +10,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from smolagents import CodeAgent, WebSearchTool, tool
+from smolagents import CodeAgent, OpenAIServerModel, WebSearchTool, tool
 from smolagents.agents import ActionStep
-from smolagents.cli import load_model
 
 
 alfred_guest_list_request = """
@@ -30,16 +30,10 @@ def parse_arguments():
         help="The prompt to run with the agent",
     )
     parser.add_argument(
-        "--model-type",
-        type=str,
-        default="LiteLLMModel",
-        help="The model type to use (e.g., OpenAIServerModel, LiteLLMModel, TransformersModel, InferenceClientModel)",
-    )
-    parser.add_argument(
         "--model-id",
         type=str,
-        default="gpt-4o",
-        help="The model ID to use for the specified model type",
+        default=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
+        help="OpenAI vision-capable model ID (default: OPENAI_MODEL or gpt-4.1-mini)",
     )
     return parser.parse_args()
 
@@ -126,45 +120,45 @@ Don't bother about the helium driver, it's already managed.
 We've already ran "from helium import *"
 Then you can go to pages!
 Code:
-```py
+<code>
 go_to('github.com/trending')
-```<end_code>
+</code>
 You can directly click clickable elements by inputting the text that appears on them.
 Code:
-```py
+<code>
 click("Top products")
-```<end_code>
+</code>
 If it's a link:
 Code:
-```py
+<code>
 click(Link("Top products"))
-```<end_code>
+</code>
 If you try to interact with an element and it's not found, you'll get a LookupError.
 In general stop your action after each button click to see what happens on your screenshot.
 Never try to login in a page.
 To scroll up or down, use scroll_down or scroll_up with as an argument the number of pixels to scroll from.
 Code:
-```py
+<code>
 scroll_down(num_pixels=1200) # This will scroll one viewport down
-```<end_code>
+</code>
 When you have pop-ups with a cross icon to close, don't try to click the close icon by finding its element or targeting an 'X' element (this most often fails).
 Just use your built-in tool `close_popups` to close them:
 Code:
-```py
+<code>
 close_popups()
-```<end_code>
+</code>
 You can use .exists() to check for the existence of an element. For example:
 Code:
-```py
+<code>
 if Text('Accept cookies?').exists():
     click('I accept')
-```<end_code>
+</code>
 Proceed in several steps rather than trying to solve the task in one shot.
 And at the end, only when you have your answer, return your final answer.
 Code:
-```py
+<code>
 final_answer("YOUR_ANSWER_HERE")
-```<end_code>
+</code>
 If pages seem stuck on loading, you might have to wait, for instance `import time` and run `time.sleep(5.0)`. But don't overuse this!
 To list elements on page, DO NOT try code-based element searches like 'contributors = find_all(S("ol > li"))': just look at the latest screenshot you have and read it visually, or use your tool search_item_ctrl_f.
 Of course, you can act on buttons like a user would do when navigating.
@@ -178,13 +172,23 @@ When you have modals or cookie banners on screen, you should get rid of them bef
 def main():
     # Load environment variables
     # For example to use an OpenAI model, create a local .env file with OPENAI_API_KEY="<your_open_ai_key_here>"
-    load_dotenv() 
+    load_dotenv()
 
     # Parse command line arguments
     args = parse_arguments()
 
-    # Initialize the model based on the provided arguments
-    model = load_model(args.model_type, args.model_id)
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise RuntimeError(
+            "OPENAI_API_KEY is not set. Add it to your environment or a local .env file."
+        )
+
+    # Browser screenshots are sent to the model, so use a vision-capable model.
+    model = OpenAIServerModel(
+        model_id=args.model_id,
+        api_key=api_key,
+        max_tokens=4096,
+    )
 
     global driver
     driver = initialize_driver()
